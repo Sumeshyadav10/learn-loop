@@ -96,7 +96,7 @@ app.use((err, req, res, next) => {
 httpServer.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
   console.log(`🔌 Socket.IO initialized and ready for connections`);
-  
+
   // Initialize weekly poll scheduler
   scheduleWeeklyPolls();
 });

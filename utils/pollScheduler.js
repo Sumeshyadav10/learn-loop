@@ -14,7 +14,9 @@ export const scheduleWeeklyPolls = () => {
     }
   });
 
-  console.log("📅 Weekly poll scheduler initialized - runs every Monday at 9:00 AM");
+  console.log(
+    "📅 Weekly poll scheduler initialized - runs every Monday at 9:00 AM"
+  );
 };
 
 // Manual trigger for testing
