@@ -1,0 +1,1632 @@
+[{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef94f"
+  },
+  "branch": "Computer",
+  "semester": 1,
+  "subject_name": "Mathematics-I",
+  "subject_code": "MATH101",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef950"
+  },
+  "branch": "Computer",
+  "semester": 1,
+  "subject_name": "Physics",
+  "subject_code": "PHY101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef951"
+  },
+  "branch": "Computer",
+  "semester": 1,
+  "subject_name": "Chemistry",
+  "subject_code": "CHEM101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef952"
+  },
+  "branch": "Computer",
+  "semester": 1,
+  "subject_name": "Programming in C",
+  "subject_code": "CS101",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef953"
+  },
+  "branch": "Computer",
+  "semester": 1,
+  "subject_name": "English Communication",
+  "subject_code": "ENG101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef954"
+  },
+  "branch": "Computer",
+  "semester": 1,
+  "subject_name": "Engineering Graphics",
+  "subject_code": "EG101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef955"
+  },
+  "branch": "Computer",
+  "semester": 3,
+  "subject_name": "Mathematics-III",
+  "subject_code": "MATH301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef956"
+  },
+  "branch": "Computer",
+  "semester": 3,
+  "subject_name": "Database Management Systems",
+  "subject_code": "CS301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef957"
+  },
+  "branch": "Computer",
+  "semester": 3,
+  "subject_name": "Computer Organization",
+  "subject_code": "CS302",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef958"
+  },
+  "branch": "Computer",
+  "semester": 3,
+  "subject_name": "Operating Systems",
+  "subject_code": "CS303",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef959"
+  },
+  "branch": "Computer",
+  "semester": 3,
+  "subject_name": "Software Engineering",
+  "subject_code": "CS304",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef95a"
+  },
+  "branch": "Computer",
+  "semester": 3,
+  "subject_name": "Discrete Mathematics",
+  "subject_code": "MATH302",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef95b"
+  },
+  "branch": "Computer",
+  "semester": 5,
+  "subject_name": "Computer Networks",
+  "subject_code": "CS501",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef95c"
+  },
+  "branch": "Computer",
+  "semester": 5,
+  "subject_name": "Theory of Computation",
+  "subject_code": "CS502",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef95d"
+  },
+  "branch": "Computer",
+  "semester": 5,
+  "subject_name": "Design and Analysis of Algorithms",
+  "subject_code": "CS503",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef95e"
+  },
+  "branch": "Computer",
+  "semester": 5,
+  "subject_name": "Web Technologies",
+  "subject_code": "CS504",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef95f"
+  },
+  "branch": "Computer",
+  "semester": 5,
+  "subject_name": "Artificial Intelligence",
+  "subject_code": "CS505",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef960"
+  },
+  "branch": "Computer",
+  "semester": 5,
+  "subject_name": "Compiler Design",
+  "subject_code": "CS506",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef961"
+  },
+  "branch": "Computer",
+  "semester": 7,
+  "subject_name": "Machine Learning",
+  "subject_code": "CS701",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef962"
+  },
+  "branch": "Computer",
+  "semester": 7,
+  "subject_name": "Cloud Computing",
+  "subject_code": "CS702",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef963"
+  },
+  "branch": "Computer",
+  "semester": 7,
+  "subject_name": "Cyber Security",
+  "subject_code": "CS703",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef964"
+  },
+  "branch": "Computer",
+  "semester": 7,
+  "subject_name": "Mobile Application Development",
+  "subject_code": "CS704",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef965"
+  },
+  "branch": "Computer",
+  "semester": 7,
+  "subject_name": "Data Mining",
+  "subject_code": "CS705",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef966"
+  },
+  "branch": "Computer",
+  "semester": 7,
+  "subject_name": "Project Work",
+  "subject_code": "CS706",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef967"
+  },
+  "branch": "IT",
+  "semester": 1,
+  "subject_name": "Mathematics-I",
+  "subject_code": "MATH101",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef968"
+  },
+  "branch": "IT",
+  "semester": 1,
+  "subject_name": "Physics",
+  "subject_code": "PHY101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef969"
+  },
+  "branch": "IT",
+  "semester": 1,
+  "subject_name": "Chemistry",
+  "subject_code": "CHEM101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef96a"
+  },
+  "branch": "IT",
+  "semester": 1,
+  "subject_name": "Programming Fundamentals",
+  "subject_code": "IT101",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef96b"
+  },
+  "branch": "IT",
+  "semester": 1,
+  "subject_name": "English Communication",
+  "subject_code": "ENG101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef96c"
+  },
+  "branch": "IT",
+  "semester": 1,
+  "subject_name": "Basic Computer Skills",
+  "subject_code": "IT102",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef96d"
+  },
+  "branch": "IT",
+  "semester": 3,
+  "subject_name": "Mathematics-III",
+  "subject_code": "MATH301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef96e"
+  },
+  "branch": "IT",
+  "semester": 3,
+  "subject_name": "Data Structures and Algorithms",
+  "subject_code": "IT301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef96f"
+  },
+  "branch": "IT",
+  "semester": 3,
+  "subject_name": "Database Systems",
+  "subject_code": "IT302",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef970"
+  },
+  "branch": "IT",
+  "semester": 3,
+  "subject_name": "Object Oriented Programming",
+  "subject_code": "IT303",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef971"
+  },
+  "branch": "IT",
+  "semester": 3,
+  "subject_name": "System Analysis and Design",
+  "subject_code": "IT304",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef972"
+  },
+  "branch": "IT",
+  "semester": 3,
+  "subject_name": "Computer Networks",
+  "subject_code": "IT305",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef973"
+  },
+  "branch": "IT",
+  "semester": 5,
+  "subject_name": "Software Engineering",
+  "subject_code": "IT501",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef974"
+  },
+  "branch": "IT",
+  "semester": 5,
+  "subject_name": "Web Development",
+  "subject_code": "IT502",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef975"
+  },
+  "branch": "IT",
+  "semester": 5,
+  "subject_name": "Information Security",
+  "subject_code": "IT503",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef976"
+  },
+  "branch": "IT",
+  "semester": 5,
+  "subject_name": "Network Administration",
+  "subject_code": "IT504",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef977"
+  },
+  "branch": "IT",
+  "semester": 5,
+  "subject_name": "Human Computer Interaction",
+  "subject_code": "IT505",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef978"
+  },
+  "branch": "IT",
+  "semester": 5,
+  "subject_name": "Digital Image Processing",
+  "subject_code": "IT506",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef979"
+  },
+  "branch": "IT",
+  "semester": 7,
+  "subject_name": "Enterprise Resource Planning",
+  "subject_code": "IT701",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef97a"
+  },
+  "branch": "IT",
+  "semester": 7,
+  "subject_name": "E-Commerce Technology",
+  "subject_code": "IT702",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef97b"
+  },
+  "branch": "IT",
+  "semester": 7,
+  "subject_name": "Cloud Computing",
+  "subject_code": "IT703",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef97c"
+  },
+  "branch": "IT",
+  "semester": 7,
+  "subject_name": "Business Intelligence",
+  "subject_code": "IT704",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef97d"
+  },
+  "branch": "IT",
+  "semester": 7,
+  "subject_name": "Internet of Things",
+  "subject_code": "IT705",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef97e"
+  },
+  "branch": "IT",
+  "semester": 7,
+  "subject_name": "Major Project",
+  "subject_code": "IT706",
+  "credits": 6,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef97f"
+  },
+  "branch": "AIML",
+  "semester": 1,
+  "subject_name": "Mathematics-I",
+  "subject_code": "MATH101",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef980"
+  },
+  "branch": "AIML",
+  "semester": 1,
+  "subject_name": "Physics",
+  "subject_code": "PHY101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef981"
+  },
+  "branch": "AIML",
+  "semester": 1,
+  "subject_name": "Chemistry",
+  "subject_code": "CHEM101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef982"
+  },
+  "branch": "AIML",
+  "semester": 1,
+  "subject_name": "Python Programming",
+  "subject_code": "AIML101",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef983"
+  },
+  "branch": "AIML",
+  "semester": 1,
+  "subject_name": "English Communication",
+  "subject_code": "ENG101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef984"
+  },
+  "branch": "AIML",
+  "semester": 1,
+  "subject_name": "Introduction to AI",
+  "subject_code": "AIML102",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef985"
+  },
+  "branch": "AIML",
+  "semester": 3,
+  "subject_name": "Mathematics-III",
+  "subject_code": "MATH301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef986"
+  },
+  "branch": "AIML",
+  "semester": 3,
+  "subject_name": "Data Structures and Algorithms",
+  "subject_code": "AIML301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef987"
+  },
+  "branch": "AIML",
+  "semester": 3,
+  "subject_name": "Machine Learning",
+  "subject_code": "AIML302",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef988"
+  },
+  "branch": "AIML",
+  "semester": 3,
+  "subject_name": "Statistics and Probability",
+  "subject_code": "STAT301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef989"
+  },
+  "branch": "AIML",
+  "semester": 3,
+  "subject_name": "Database Management Systems",
+  "subject_code": "AIML303",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef98a"
+  },
+  "branch": "AIML",
+  "semester": 3,
+  "subject_name": "Linear Algebra",
+  "subject_code": "MATH302",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef98b"
+  },
+  "branch": "AIML",
+  "semester": 5,
+  "subject_name": "Deep Learning",
+  "subject_code": "AIML501",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef98c"
+  },
+  "branch": "AIML",
+  "semester": 5,
+  "subject_name": "Natural Language Processing",
+  "subject_code": "AIML502",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef98d"
+  },
+  "branch": "AIML",
+  "semester": 5,
+  "subject_name": "Computer Vision",
+  "subject_code": "AIML503",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef98e"
+  },
+  "branch": "AIML",
+  "semester": 5,
+  "subject_name": "Big Data Analytics",
+  "subject_code": "AIML504",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef98f"
+  },
+  "branch": "AIML",
+  "semester": 5,
+  "subject_name": "Neural Networks",
+  "subject_code": "AIML505",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef990"
+  },
+  "branch": "AIML",
+  "semester": 5,
+  "subject_name": "Pattern Recognition",
+  "subject_code": "AIML506",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef991"
+  },
+  "branch": "AIML",
+  "semester": 7,
+  "subject_name": "Reinforcement Learning",
+  "subject_code": "AIML701",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef992"
+  },
+  "branch": "AIML",
+  "semester": 7,
+  "subject_name": "AI Ethics and Society",
+  "subject_code": "AIML702",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef993"
+  },
+  "branch": "AIML",
+  "semester": 7,
+  "subject_name": "Robotics and Automation",
+  "subject_code": "AIML703",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef994"
+  },
+  "branch": "AIML",
+  "semester": 7,
+  "subject_name": "Advanced Machine Learning",
+  "subject_code": "AIML704",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef995"
+  },
+  "branch": "AIML",
+  "semester": 7,
+  "subject_name": "Quantum Computing",
+  "subject_code": "AIML705",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef996"
+  },
+  "branch": "AIML",
+  "semester": 7,
+  "subject_name": "Capstone Project",
+  "subject_code": "AIML706",
+  "credits": 6,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef997"
+  },
+  "branch": "ECS",
+  "semester": 1,
+  "subject_name": "Mathematics-I",
+  "subject_code": "MATH101",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef998"
+  },
+  "branch": "ECS",
+  "semester": 1,
+  "subject_name": "Physics",
+  "subject_code": "PHY101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef999"
+  },
+  "branch": "ECS",
+  "semester": 1,
+  "subject_name": "Chemistry",
+  "subject_code": "CHEM101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef99a"
+  },
+  "branch": "ECS",
+  "semester": 1,
+  "subject_name": "Circuit Analysis",
+  "subject_code": "ECS101",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef99b"
+  },
+  "branch": "ECS",
+  "semester": 1,
+  "subject_name": "English Communication",
+  "subject_code": "ENG101",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef99c"
+  },
+  "branch": "ECS",
+  "semester": 1,
+  "subject_name": "Programming in C",
+  "subject_code": "ECS102",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef99d"
+  },
+  "branch": "ECS",
+  "semester": 3,
+  "subject_name": "Mathematics-III",
+  "subject_code": "MATH301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef99e"
+  },
+  "branch": "ECS",
+  "semester": 3,
+  "subject_name": "Electronic Devices and Circuits",
+  "subject_code": "ECS301",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef99f"
+  },
+  "branch": "ECS",
+  "semester": 3,
+  "subject_name": "Digital Electronics",
+  "subject_code": "ECS302",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a0"
+  },
+  "branch": "ECS",
+  "semester": 3,
+  "subject_name": "Signals and Systems",
+  "subject_code": "ECS303",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a1"
+  },
+  "branch": "ECS",
+  "semester": 3,
+  "subject_name": "Network Analysis",
+  "subject_code": "ECS304",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a2"
+  },
+  "branch": "ECS",
+  "semester": 3,
+  "subject_name": "Data Structures",
+  "subject_code": "ECS305",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a3"
+  },
+  "branch": "ECS",
+  "semester": 5,
+  "subject_name": "Communication Systems",
+  "subject_code": "ECS501",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a4"
+  },
+  "branch": "ECS",
+  "semester": 5,
+  "subject_name": "Microprocessors and Microcontrollers",
+  "subject_code": "ECS502",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a5"
+  },
+  "branch": "ECS",
+  "semester": 5,
+  "subject_name": "Control Systems",
+  "subject_code": "ECS503",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a6"
+  },
+  "branch": "ECS",
+  "semester": 5,
+  "subject_name": "Electromagnetic Theory",
+  "subject_code": "ECS504",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a7"
+  },
+  "branch": "ECS",
+  "semester": 5,
+  "subject_name": "Digital Signal Processing",
+  "subject_code": "ECS505",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a8"
+  },
+  "branch": "ECS",
+  "semester": 5,
+  "subject_name": "VLSI Design",
+  "subject_code": "ECS506",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9a9"
+  },
+  "branch": "ECS",
+  "semester": 7,
+  "subject_name": "Wireless Communication",
+  "subject_code": "ECS701",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9aa"
+  },
+  "branch": "ECS",
+  "semester": 7,
+  "subject_name": "Embedded Systems",
+  "subject_code": "ECS702",
+  "credits": 4,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9ab"
+  },
+  "branch": "ECS",
+  "semester": 7,
+  "subject_name": "Optical Communication",
+  "subject_code": "ECS703",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9ac"
+  },
+  "branch": "ECS",
+  "semester": 7,
+  "subject_name": "Satellite Communication",
+  "subject_code": "ECS704",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9ad"
+  },
+  "branch": "ECS",
+  "semester": 7,
+  "subject_name": "Internet of Things",
+  "subject_code": "ECS705",
+  "credits": 3,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+},
+{
+  "_id": {
+    "$oid": "6895e67e2905db1e765ef9ae"
+  },
+  "branch": "ECS",
+  "semester": 7,
+  "subject_name": "Final Year Project",
+  "subject_code": "ECS706",
+  "credits": 6,
+  "isActive": true,
+  "createdAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  },
+  "updatedAt": {
+    "$date": "2025-08-08T11:58:54.223Z"
+  }
+}]
