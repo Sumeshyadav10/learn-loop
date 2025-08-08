@@ -18,6 +18,10 @@ const mentorSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    profileImage: {
+      type: String,
+      default: null,
+    },
     designation: {
       type: String,
       required: true,

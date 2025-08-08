@@ -255,6 +255,64 @@ const studentSchema = new mongoose.Schema(
         },
       ],
     },
+    // Official Professional Mentors (separate from student mentors)
+    officialMentors: {
+      // Requests sent to official mentors
+      outgoingRequests: [
+        {
+          mentor_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Mentor",
+            required: true,
+          },
+          message: {
+            type: String,
+            trim: true,
+            maxlength: 500,
+          },
+          status: {
+            type: String,
+            enum: ["pending", "accepted", "rejected"],
+            default: "pending",
+          },
+          requestedAt: {
+            type: Date,
+            default: Date.now,
+          },
+          respondedAt: {
+            type: Date,
+          },
+        },
+      ],
+      // Active official mentor relationships
+      activeMentors: [
+        {
+          mentor_id: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Mentor",
+            required: true,
+          },
+          connectedAt: {
+            type: Date,
+            default: Date.now,
+          },
+          isActive: {
+            type: Boolean,
+            default: true,
+          },
+          lastInteraction: {
+            type: Date,
+            default: Date.now,
+          },
+          mentorshipGoals: [
+            {
+              type: String,
+              trim: true,
+            },
+          ],
+        },
+      ],
+    },
     lastActiveAt: {
       type: Date,
       default: Date.now,
@@ -283,6 +341,8 @@ studentSchema.index({ "mentorshipConnections.incomingRequests.student_id": 1 });
 studentSchema.index({ "mentorshipConnections.outgoingRequests.mentor_id": 1 });
 studentSchema.index({ "mentorshipConnections.mentors.mentor_id": 1 });
 studentSchema.index({ "mentorshipConnections.mentees.mentee_id": 1 });
+studentSchema.index({ "officialMentors.outgoingRequests.mentor_id": 1 });
+studentSchema.index({ "officialMentors.activeMentors.mentor_id": 1 });
 
 // Compound index for efficient mentor discovery
 studentSchema.index({
@@ -356,6 +416,36 @@ studentSchema.methods.canAcceptMoreMentees = function () {
     currentCount < this.mentorPreferences.maxMentees &&
     this.mentorPreferences.isAvailableForMentoring
   );
+};
+
+// Instance method to check if student has already requested an official mentor
+studentSchema.methods.hasRequestedOfficialMentor = function (mentorId) {
+  return this.officialMentors.outgoingRequests.some(
+    (request) =>
+      request.mentor_id.toString() === mentorId.toString() &&
+      request.status === "pending"
+  );
+};
+
+// Instance method to check if student has an active official mentor
+studentSchema.methods.hasActiveOfficialMentor = function (mentorId) {
+  return this.officialMentors.activeMentors.some(
+    (mentor) =>
+      mentor.mentor_id.toString() === mentorId.toString() && mentor.isActive
+  );
+};
+
+// Instance method to check if 4th year student (can only get official mentors, no student mentors)
+studentSchema.methods.isFourthYear = function () {
+  return this.year === 4;
+};
+
+// Instance method to get eligible mentor types based on year
+studentSchema.methods.getEligibleMentorTypes = function () {
+  if (this.year === 4) {
+    return ['official']; // 4th year can only get official mentors
+  }
+  return ['student', 'official']; // Others can get both student and official mentors
 };
 
 // Static method to find mentors for a specific subject

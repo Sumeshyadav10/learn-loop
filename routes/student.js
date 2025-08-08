@@ -23,6 +23,12 @@ import {
   getCurrentMentees,
   endMentorshipRelationship,
   getMentorshipDashboard,
+  sendOfficialMentorRequest,
+  getOfficialMentorRequests,
+  getCurrentOfficialMentors,
+  getAvailableOfficialMentors,
+  endOfficialMentorshipRelationship,
+  findMentorsForSubjectEnhanced,
 } from "../controllers/studentController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 import {
@@ -166,6 +172,51 @@ router.get(
   "/mentoring/dashboard",
   requireCompleteProfile,
   getMentorshipDashboard
+);
+
+// ============= OFFICIAL MENTOR ROUTES =============
+
+// Get available official mentors
+router.get(
+  "/official-mentors/available",
+  requireCompleteProfile,
+  getAvailableOfficialMentors
+);
+
+// Send request to official mentor
+router.post(
+  "/official-mentors/request",
+  requireCompleteProfile,
+  sendOfficialMentorRequest
+);
+
+// Get official mentor requests
+router.get(
+  "/official-mentors/requests",
+  requireCompleteProfile,
+  getOfficialMentorRequests
+);
+
+// Get current official mentors
+router.get(
+  "/official-mentors/current",
+  requireCompleteProfile,
+  getCurrentOfficialMentors
+);
+
+// End official mentorship relationship
+router.put(
+  "/official-mentors/relationship/end",
+  requireCompleteProfile,
+  endOfficialMentorshipRelationship
+);
+
+// Enhanced mentor discovery (handles 4th year students)
+router.get(
+  "/mentors/subject/:subjectId/enhanced",
+  requireCompleteProfile,
+  validateSubjectId,
+  findMentorsForSubjectEnhanced
 );
 
 // Subject-related routes
