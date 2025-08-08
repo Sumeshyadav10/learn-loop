@@ -1,0 +1,473 @@
+# Weekly Polling System Documentation
+
+## Overview
+
+The Weekly Polling System allows students to vote for mentors who will conduct educational sessions for their branch and year. The system automatically creates weekly polls for different subjects, enabling democratic selection of session leaders.
+
+## Features
+
+### 🗳️ Core Polling Features
+
+- **Automated Weekly Poll Creation**: System automatically creates polls every week
+- **Branch & Year Targeting**: Polls are specific to student branch and year
+- **Subject-Based Voting**: Separate polls for different subjects
+- **Real-time Results**: Live vote counting and participation tracking
+- **Mentor Session Scheduling**: Winners can schedule sessions for the group
+
+### 🎯 Targeting System
+
+- **Branch-specific**: Polls target specific branches (Computer, IT, AIML, ECS)
+- **Year-specific**: Only students from the same year can participate
+- **Minimum Participation**: Requires at least 5 students to create a poll
+- **Eligible Mentors**: Only higher-year students with good proficiency can be candidates
+
+## API Endpoints
+
+### Student Endpoints
+
+#### Get Active Polls
+
+```http
+GET /api/polls/active
+Authorization: Bearer <token>
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "_id": "poll_id",
+      "title": "Weekly Data Structures Session Poll - Week 32",
+      "description": "Vote for your preferred mentor...",
+      "targetCriteria": {
+        "branch": "Computer",
+        "year": 2
+      },
+      "subject": {
+        "_id": "subject_id",
+        "name": "Data Structures",
+        "code": "CS201"
+      },
+      "mentorCandidates": [
+        {
+          "mentor_id": {
+            "_id": "mentor_id",
+            "name": "John Doe",
+            "profileImage": "image_url"
+          },
+          "mentorType": "student",
+          "sessionTitle": "DS - Problem Solving Session",
+          "sessionDescription": "Covering trees, graphs, and algorithms",
+          "proposedDateTime": "2025-08-15T14:00:00Z",
+          "votesReceived": 12
+        }
+      ],
+      "totalVotes": 25,
+      "eligibleStudentCount": 45,
+      "participationRate": 55.6,
+      "endDate": "2025-08-14T23:59:59Z",
+      "hasVoted": false,
+      "timeRemaining": 86400000,
+      "isActive": true
+    }
+  ]
+}
+```
+
+#### Vote in Poll
+
+```http
+POST /api/polls/{pollId}/vote
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "candidateIndex": 0
+}
+```
+
+#### Get Poll Results
+
+```http
+GET /api/polls/{pollId}/results
+Authorization: Bearer <token>
+```
+
+### Admin Endpoints
+
+#### Create Manual Poll
+
+```http
+POST /api/polls/create
+Authorization: Bearer <admin_token>
+Content-Type: application/json
+
+{
+  "title": "Special Session Poll",
+  "description": "Vote for special exam preparation session",
+  "targetCriteria": {
+    "branch": "Computer",
+    "year": 3
+  },
+  "subjectId": "subject_id",
+  "mentorCandidates": [
+    {
+      "mentorId": "mentor_id",
+      "mentorType": "student",
+      "sessionTitle": "Exam Prep Session",
+      "sessionDescription": "Comprehensive revision",
+      "proposedDateTime": "2025-08-20T15:00:00Z"
+    }
+  ],
+  "endDate": "2025-08-18T23:59:59Z",
+  "settings": {
+    "allowMultipleVotes": false,
+    "showRealTimeResults": true
+  }
+}
+```
+
+#### Create Weekly Polls (System)
+
+```http
+POST /api/polls/create-weekly
+Authorization: Bearer <admin_token>
+```
+
+## Database Schema
+
+### Poll Model
+
+```javascript
+{
+  title: String,                    // Poll title
+  description: String,              // Poll description
+  targetCriteria: {
+    branch: String,                 // Target branch
+    year: Number,                   // Target year
+    semester: Number                // Optional semester filter
+  },
+  subject: ObjectId,                // Subject reference
+  pollType: String,                 // "mentor_session", "topic_preference", "study_group"
+  mentorCandidates: [{
+    mentor_id: ObjectId,            // Student mentor ID
+    official_mentor_id: ObjectId,   // Official mentor ID
+    mentorType: String,             // "student" or "official"
+    sessionTitle: String,           // Proposed session title
+    sessionDescription: String,     // Session description
+    proposedDateTime: Date,         // Proposed session time
+    votesReceived: Number,          // Vote count
+    voters: [{
+      student_id: ObjectId,
+      votedAt: Date
+    }]
+  }],
+  startDate: Date,                  // Poll start time
+  endDate: Date,                    // Poll end time
+  status: String,                   // "draft", "active", "ended", "cancelled"
+  totalVotes: Number,               // Total votes cast
+  eligibleStudentCount: Number,     // Eligible voters
+  participationRate: Number,        // Participation percentage
+  winner: {
+    mentor_id: ObjectId,
+    mentorType: String,
+    winningVotes: Number,
+    sessionScheduled: Boolean,
+    sessionDetails: {
+      scheduledDate: Date,
+      meetingLink: String,
+      additionalInfo: String
+    }
+  },
+  isAutoGenerated: Boolean,         // System-generated poll
+  weekNumber: Number,               // Week of year
+  year: Number,                     // Year
+  settings: {
+    allowMultipleVotes: Boolean,
+    showRealTimeResults: Boolean,
+    requireComment: Boolean,
+    notifyWhenEnded: Boolean
+  }
+}
+```
+
+## Automatic Poll Creation
+
+### Weekly Schedule
+
+- **When**: Every Monday at 00:00 (configurable)
+- **Duration**: Polls run for 6 days (Monday to Saturday)
+- **Sessions**: Sunday (poll results day)
+
+### Eligibility Criteria
+
+- **Student Groups**: Minimum 5 students per branch-year combination
+- **Mentor Candidates**: Higher-year students with:
+  - Proficiency level ≥ 4 in the subject
+  - Available for mentoring
+  - Active profile status
+
+### Subject Selection
+
+- **All Active Subjects**: Polls created for all subjects marked as active
+- **Branch-Relevant**: Only subjects relevant to the branch
+- **Semester-Appropriate**: Subjects for current/previous semesters
+
+## Real-time Features
+
+### Socket.IO Events
+
+#### Client → Server Events
+
+```javascript
+// Vote update request
+socket.emit("poll_vote_update", {
+  pollId: "poll_id",
+  candidateIndex: 0,
+});
+
+// Real-time results subscription
+socket.emit("subscribe_poll_updates", {
+  pollId: "poll_id",
+});
+```
+
+#### Server → Client Events
+
+```javascript
+// Poll update broadcast
+socket.on("poll_update", (data) => {
+  // data: { pollId, totalVotes, participationRate, candidateVotes }
+});
+
+// New polls available
+socket.on("new_polls_available", (data) => {
+  // data: { count, weekNumber, year, message }
+});
+
+// Poll ended notification
+socket.on("poll_ended", (data) => {
+  // data: { pollId, winner, results }
+});
+```
+
+## Notification Integration
+
+### Automatic Notifications
+
+- **New Poll Created**: Notify all eligible students
+- **Poll Ending Soon**: 2-hour warning notification
+- **Poll Ended**: Results and winner announcement
+- **Session Scheduled**: When winner schedules session
+
+### Notification Types
+
+```javascript
+// New poll notification
+{
+  type: "system_announcement",
+  title: "New Weekly Poll Available",
+  message: "Vote for your preferred mentor for Data Structures session!",
+  data: {
+    pollId: "poll_id",
+    redirectUrl: "/polls/active"
+  }
+}
+
+// Poll result notification
+{
+  type: "system_announcement",
+  title: "Poll Results Available",
+  message: "John Doe won the Data Structures session poll with 15 votes!",
+  data: {
+    pollId: "poll_id",
+    winnerId: "winner_id",
+    redirectUrl: "/polls/results/poll_id"
+  }
+}
+```
+
+## Usage Workflows
+
+### 1. Weekly Poll Creation (Automated)
+
+```
+Monday 00:00
+├── System identifies eligible groups (branch + year)
+├── Creates polls for relevant subjects
+├── Adds potential mentor candidates
+├── Sends notifications to eligible students
+└── Activates polls for voting
+```
+
+### 2. Student Voting Process
+
+```
+Student Login
+├── Views active polls in dashboard
+├── Checks poll details and mentor candidates
+├── Casts vote for preferred mentor
+├── Receives real-time updates
+└── Gets notified when poll ends
+```
+
+### 3. Poll Completion & Session Scheduling
+
+```
+Poll Ends (Saturday 23:59)
+├── System determines winner
+├── Notifies all participants
+├── Winner contacted for session scheduling
+├── Session details shared with group
+└── Poll archived for history
+```
+
+## Frontend Integration Examples
+
+### React Hook for Polls
+
+```javascript
+const usePolls = () => {
+  const [polls, setPolls] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch active polls
+    fetchActivePolls();
+
+    // Socket listeners
+    socket.on("poll_update", handlePollUpdate);
+    socket.on("new_polls_available", handleNewPolls);
+
+    return () => {
+      socket.off("poll_update");
+      socket.off("new_polls_available");
+    };
+  }, []);
+
+  const vote = async (pollId, candidateIndex) => {
+    try {
+      const response = await api.post(`/polls/${pollId}/vote`, {
+        candidateIndex,
+      });
+
+      // Update local state
+      setPolls((prev) =>
+        prev.map((poll) =>
+          poll._id === pollId ? response.data.data.poll : poll
+        )
+      );
+
+      toast.success("Vote cast successfully!");
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  return { polls, loading, vote };
+};
+```
+
+### Poll Card Component
+
+```jsx
+const PollCard = ({ poll, onVote }) => {
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+
+  return (
+    <div className="poll-card">
+      <h3>{poll.title}</h3>
+      <p>{poll.description}</p>
+
+      <div className="poll-stats">
+        <span>Total Votes: {poll.totalVotes}</span>
+        <span>Participation: {poll.participationRate}%</span>
+        <span>Time Left: {formatTimeRemaining(poll.timeRemaining)}</span>
+      </div>
+
+      <div className="candidates">
+        {poll.mentorCandidates.map((candidate, index) => (
+          <div key={index} className="candidate">
+            <img src={candidate.mentor_id.profileImage} alt="Mentor" />
+            <div className="candidate-info">
+              <h4>{candidate.mentor_id.name}</h4>
+              <p>{candidate.sessionTitle}</p>
+              <p>{candidate.sessionDescription}</p>
+              <span>Votes: {candidate.votesReceived}</span>
+            </div>
+
+            {!poll.hasVoted && (
+              <button
+                onClick={() => onVote(poll._id, index)}
+                className={selectedCandidate === index ? "selected" : ""}
+              >
+                Vote
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {poll.hasVoted && (
+        <div className="voted-indicator">
+          ✅ You have already voted in this poll
+        </div>
+      )}
+    </div>
+  );
+};
+```
+
+## Performance Considerations
+
+### Database Optimization
+
+- **Indexes**: Optimized for frequent queries
+- **Aggregation**: Efficient vote counting and statistics
+- **Cleanup**: Automatic removal of old polls
+
+### Caching Strategy
+
+- **Active Polls**: Cache frequently accessed polls
+- **Vote Counts**: Real-time updates with cache invalidation
+- **Student Eligibility**: Cache branch-year combinations
+
+### Rate Limiting
+
+- **Vote Casting**: Prevent rapid successive votes
+- **Poll Creation**: Limit admin poll creation frequency
+- **API Calls**: Standard rate limiting for all endpoints
+
+## Security Measures
+
+### Vote Integrity
+
+- **Single Vote**: Prevent multiple votes (unless configured)
+- **Eligibility Check**: Verify student belongs to target group
+- **Time Validation**: Ensure poll is active when voting
+
+### Data Protection
+
+- **Authorization**: JWT-based authentication required
+- **Input Validation**: Sanitize all poll creation inputs
+- **SQL Injection**: Mongoose protection against injection attacks
+
+## Monitoring & Analytics
+
+### Key Metrics
+
+- **Participation Rate**: Percentage of eligible students voting
+- **Poll Completion**: Polls that reach minimum participation
+- **Mentor Selection**: Popular mentors and session types
+- **Engagement**: Time spent on polls, voting patterns
+
+### Alerts
+
+- **Low Participation**: Alert if participation < 30%
+- **Technical Issues**: Monitor for voting failures
+- **Expired Polls**: Ensure automatic cleanup works
+
+This comprehensive polling system enables democratic mentor selection and promotes peer-to-peer learning through community-driven session planning!

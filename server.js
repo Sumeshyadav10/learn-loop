@@ -61,6 +61,7 @@ import subjectRoutes from "./routes/subject.js";
 import profileRoutes from "./routes/profile.js";
 import notificationRoutes from "./routes/notification.js";
 import ratingRoutes from "./routes/rating.js";
+import pollRoutes from "./routes/poll.js";
 
 // New routes for mentorship platform
 app.use("/api/mentors", mentorRoutes);
@@ -69,6 +70,7 @@ app.use("/api/subjects", subjectRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/ratings", ratingRoutes);
+app.use("/api/polls", pollRoutes);
 
 // 404 Route Not Found handler
 app.use((req, res, next) => {
