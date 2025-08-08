@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.js";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { initializeSocket } from "./utils/socketConfig.js";
+import { scheduleWeeklyPolls } from "./utils/pollScheduler.js";
 
 // Load environment variables
 dotenv.config();
@@ -95,6 +96,9 @@ app.use((err, req, res, next) => {
 httpServer.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
   console.log(`🔌 Socket.IO initialized and ready for connections`);
+  
+  // Initialize weekly poll scheduler
+  scheduleWeeklyPolls();
 });
 
 export default app;
