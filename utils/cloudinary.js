@@ -1,10 +1,10 @@
-import { v2 as cloudinary } from 'cloudinary';
-import fs from 'fs';
-import dotenv from 'dotenv';
+import { v2 as cloudinary } from "cloudinary";
+import fs from "fs";
+import dotenv from "dotenv";
 dotenv.config();
 
 console.log(
-  'Cloudinary config:',
+  "Cloudinary config:",
   process.env.CLOUDINARY_CLOUD_NAME,
   process.env.CLOUDINARY_API_KEY,
   process.env.CLOUDINARY_API_SECRET
@@ -17,41 +17,50 @@ cloudinary.config({
 });
 
 // Upload file to Cloudinary
-export const uploadOnCloudinary = async (localFilePath, folder = 'profile-images') => {
+export const uploadOnCloudinary = async (
+  localFilePath,
+  folder = "profile-images"
+) => {
   try {
     if (!localFilePath) return null;
 
     // Upload the file to cloudinary
     const response = await cloudinary.uploader.upload(localFilePath, {
-      resource_type: 'auto',
+      resource_type: "auto",
       folder: folder, // Organize images in folders
-      quality: 'auto',
-      fetch_format: 'auto',
+      quality: "auto",
+      fetch_format: "auto",
     });
 
     // File has been uploaded successfully
-    console.log('File uploaded to cloudinary successfully:', response.secure_url);
-    
+    console.log(
+      "File uploaded to cloudinary successfully:",
+      response.secure_url
+    );
+
     // Remove the locally saved temporary file after successful upload
     try {
       fs.unlinkSync(localFilePath);
     } catch (error) {
-      console.error('Error removing local file:', error);
+      console.error("Error removing local file:", error);
     }
-    
+
     return response;
   } catch (error) {
-    console.error('Cloudinary upload error:', error);
-    
+    console.error("Cloudinary upload error:", error);
+
     // Remove the locally saved temporary file if upload failed
     try {
       if (fs.existsSync(localFilePath)) {
         fs.unlinkSync(localFilePath);
       }
     } catch (unlinkError) {
-      console.error('Error removing local file after failed upload:', unlinkError);
+      console.error(
+        "Error removing local file after failed upload:",
+        unlinkError
+      );
     }
-    
+
     return null;
   }
 };
@@ -62,10 +71,10 @@ export const deleteFromCloudinary = async (publicId) => {
     if (!publicId) return null;
 
     const response = await cloudinary.uploader.destroy(publicId);
-    console.log('File deleted from cloudinary:', response);
+    console.log("File deleted from cloudinary:", response);
     return response;
   } catch (error) {
-    console.error('Cloudinary delete error:', error);
+    console.error("Cloudinary delete error:", error);
     return null;
   }
 };
@@ -73,16 +82,16 @@ export const deleteFromCloudinary = async (publicId) => {
 // Extract public ID from Cloudinary URL
 export const extractPublicId = (cloudinaryUrl) => {
   if (!cloudinaryUrl) return null;
-  
+
   try {
     // Extract public ID from URL like: https://res.cloudinary.com/cloud_name/image/upload/v1234567890/folder/filename.jpg
-    const parts = cloudinaryUrl.split('/');
+    const parts = cloudinaryUrl.split("/");
     const filename = parts[parts.length - 1];
-    const filenameWithoutExtension = filename.split('.')[0];
+    const filenameWithoutExtension = filename.split(".")[0];
     const folder = parts[parts.length - 2];
     return `${folder}/${filenameWithoutExtension}`;
   } catch (error) {
-    console.error('Error extracting public ID:', error);
+    console.error("Error extracting public ID:", error);
     return null;
   }
 };

@@ -225,6 +225,24 @@ const studentSchema = new mongoose.Schema(
             type: Date,
             default: Date.now,
           },
+          // Rating system for mentor (given by mentee)
+          rating: {
+            score: {
+              type: Number,
+              min: 1,
+              max: 5,
+              default: null,
+            },
+            feedback: {
+              type: String,
+              maxlength: 500,
+              default: "",
+            },
+            ratedAt: {
+              type: Date,
+              default: null,
+            },
+          },
         },
       ],
       // Active mentee relationships (this student is the mentor)
@@ -251,6 +269,24 @@ const studentSchema = new mongoose.Schema(
           lastInteraction: {
             type: Date,
             default: Date.now,
+          },
+          // Rating system for mentee (given by mentor)
+          rating: {
+            score: {
+              type: Number,
+              min: 1,
+              max: 5,
+              default: null,
+            },
+            feedback: {
+              type: String,
+              maxlength: 500,
+              default: "",
+            },
+            ratedAt: {
+              type: Date,
+              default: null,
+            },
           },
         },
       ],
@@ -310,6 +346,24 @@ const studentSchema = new mongoose.Schema(
               trim: true,
             },
           ],
+          // Rating system for official mentor (given by student)
+          rating: {
+            score: {
+              type: Number,
+              min: 1,
+              max: 5,
+              default: null,
+            },
+            feedback: {
+              type: String,
+              maxlength: 500,
+              default: "",
+            },
+            ratedAt: {
+              type: Date,
+              default: null,
+            },
+          },
         },
       ],
     },
@@ -443,9 +497,9 @@ studentSchema.methods.isFourthYear = function () {
 // Instance method to get eligible mentor types based on year
 studentSchema.methods.getEligibleMentorTypes = function () {
   if (this.year === 4) {
-    return ['official']; // 4th year can only get official mentors
+    return ["official"]; // 4th year can only get official mentors
   }
-  return ['student', 'official']; // Others can get both student and official mentors
+  return ["student", "official"]; // Others can get both student and official mentors
 };
 
 // Static method to find mentors for a specific subject

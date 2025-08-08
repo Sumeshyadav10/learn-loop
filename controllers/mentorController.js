@@ -1,10 +1,21 @@
 import Mentor from "../models/mentor.js";
 import Student from "../models/student.js";
 import User from "../models/user.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiError } from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/ApiResponse.js";
-import { uploadOnCloudinary, deleteFromCloudinary, extractPublicId } from "../utils/cloudinary.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/ApiResponse.js";
+import {
+  uploadOnCloudinary,
+  deleteFromCloudinary,
+  extractPublicId,
+} from "../utils/cloudinary.js";
+import {
+  notifyOfficialMentorResponse,
+  notifyNewConnection,
+  notifyMentorshipEnded,
+  notifyMenteeRemoved,
+} from "../utils/notificationUtils.js";
+import { sendMentorshipUpdate } from "../utils/socketConfig.js";
 
 // Register a new mentor
 export const registerMentor = asyncHandler(async (req, res) => {
@@ -138,7 +149,10 @@ export const updateMentorProfileImage = asyncHandler(async (req, res) => {
     }
 
     // Upload new image to cloudinary in mentors folder
-    const result = await uploadOnCloudinary(req.file.path, 'mentors/profile-images');
+    const result = await uploadOnCloudinary(
+      req.file.path,
+      "mentors/profile-images"
+    );
 
     if (!result) {
       throw new ApiError(500, "Failed to upload image to cloudinary");
@@ -153,25 +167,23 @@ export const updateMentorProfileImage = asyncHandler(async (req, res) => {
       .populate("user_id", "email username role")
       .select("-__v");
 
-    return res
-      .status(200)
-      .json(
-        new ApiResponse(
-          200,
-          {
-            profileImage: mentor.profileImage,
-            mentor: mentor,
-            cloudinaryResponse: {
-              public_id: result.public_id,
-              secure_url: result.secure_url,
-              width: result.width,
-              height: result.height,
-              format: result.format
-            }
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          profileImage: mentor.profileImage,
+          mentor: mentor,
+          cloudinaryResponse: {
+            public_id: result.public_id,
+            secure_url: result.secure_url,
+            width: result.width,
+            height: result.height,
+            format: result.format,
           },
-          "Profile image updated successfully"
-        )
-      );
+        },
+        "Profile image updated successfully"
+      )
+    );
   } catch (error) {
     throw new ApiError(500, `Image upload failed: ${error.message}`);
   }
@@ -272,7 +284,9 @@ export const getIncomingMentorshipRequests = asyncHandler(async (req, res) => {
     }),
   })
     .populate("user_id", "email username")
-    .select("name profileImage year currentSemester branch academicInfo officialMentors");
+    .select(
+      "name profileImage year currentSemester branch academicInfo officialMentors"
+    );
 
   // Extract and format the requests
   const requests = [];
@@ -361,18 +375,62 @@ export const respondToMentorshipRequest = asyncHandler(async (req, res) => {
   request.status = response;
   request.respondedAt = new Date();
 
+  let newConnection = null;
   if (response === "accepted") {
     // Add to active mentorship relationships
-    student.officialMentors.activeMentors.push({
+    newConnection = {
       mentor_id: mentor._id,
       connectedAt: new Date(),
       isActive: true,
       lastInteraction: new Date(),
       mentorshipGoals: [],
-    });
+    };
+    student.officialMentors.activeMentors.push(newConnection);
   }
 
   await student.save();
+
+  // Send notification to student about the response
+  try {
+    await notifyOfficialMentorResponse(
+      student.user_id,
+      userId,
+      mentor.name,
+      response,
+      requestId
+    );
+
+    // Send real-time update to student
+    sendMentorshipUpdate(student.user_id, "official_request_response", {
+      mentorName: mentor.name,
+      response,
+      requestId,
+    });
+
+    // If accepted, also send connection notification
+    if (response === "accepted") {
+      await notifyNewConnection(
+        student.user_id,
+        userId,
+        mentor.name,
+        "mentor",
+        null, // No subject for official mentors
+        newConnection._id
+      );
+
+      await notifyNewConnection(
+        userId,
+        student.user_id,
+        student.name,
+        "mentee",
+        null, // No subject for official mentors
+        newConnection._id
+      );
+    }
+  } catch (notificationError) {
+    console.error("Failed to send notification:", notificationError);
+    // Don't fail the main operation if notification fails
+  }
 
   return res.status(200).json(
     new ApiResponse(
@@ -402,7 +460,9 @@ export const getCurrentMentees = asyncHandler(async (req, res) => {
     "officialMentors.activeMentors.isActive": true,
   })
     .populate("user_id", "email username")
-    .select("name profileImage year currentSemester branch academicInfo officialMentors");
+    .select(
+      "name profileImage year currentSemester branch academicInfo officialMentors"
+    );
 
   // Extract and format the mentees
   const mentees = [];
@@ -459,24 +519,25 @@ export const getMentorDashboard = asyncHandler(async (req, res) => {
   }
 
   // Get dashboard statistics
-  const [pendingRequests, acceptedRequests, rejectedRequests, activeMentees] = await Promise.all([
-    Student.countDocuments({
-      "officialMentors.outgoingRequests.mentor_id": mentor._id,
-      "officialMentors.outgoingRequests.status": "pending",
-    }),
-    Student.countDocuments({
-      "officialMentors.outgoingRequests.mentor_id": mentor._id,
-      "officialMentors.outgoingRequests.status": "accepted",
-    }),
-    Student.countDocuments({
-      "officialMentors.outgoingRequests.mentor_id": mentor._id,
-      "officialMentors.outgoingRequests.status": "rejected",
-    }),
-    Student.countDocuments({
-      "officialMentors.activeMentors.mentor_id": mentor._id,
-      "officialMentors.activeMentors.isActive": true,
-    }),
-  ]);
+  const [pendingRequests, acceptedRequests, rejectedRequests, activeMentees] =
+    await Promise.all([
+      Student.countDocuments({
+        "officialMentors.outgoingRequests.mentor_id": mentor._id,
+        "officialMentors.outgoingRequests.status": "pending",
+      }),
+      Student.countDocuments({
+        "officialMentors.outgoingRequests.mentor_id": mentor._id,
+        "officialMentors.outgoingRequests.status": "accepted",
+      }),
+      Student.countDocuments({
+        "officialMentors.outgoingRequests.mentor_id": mentor._id,
+        "officialMentors.outgoingRequests.status": "rejected",
+      }),
+      Student.countDocuments({
+        "officialMentors.activeMentors.mentor_id": mentor._id,
+        "officialMentors.activeMentors.isActive": true,
+      }),
+    ]);
 
   // Get recent mentees (last 5)
   const recentMentees = await Student.find({
@@ -518,9 +579,11 @@ export const getMentorDashboard = asyncHandler(async (req, res) => {
     },
   };
 
-  return res.status(200).json(
-    new ApiResponse(200, dashboard, "Mentor dashboard retrieved successfully")
-  );
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, dashboard, "Mentor dashboard retrieved successfully")
+    );
 });
 
 // End mentorship relationship (mentor side)
@@ -559,9 +622,11 @@ export const endMentorshipRelationship = asyncHandler(async (req, res) => {
   student.officialMentors.activeMentors[mentorshipIndex].isActive = false;
   await student.save();
 
-  return res.status(200).json(
-    new ApiResponse(200, {}, "Mentorship relationship ended successfully")
-  );
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, {}, "Mentorship relationship ended successfully")
+    );
 });
 
 // Remove mentee from mentor's list (complete removal)
@@ -596,20 +661,41 @@ export const removeMentee = asyncHandler(async (req, res) => {
 
   // Get student name for response
   const studentName = student.name;
+  const mentorshipId =
+    student.officialMentors.activeMentors[mentorshipIndex]._id;
 
   // Completely remove the mentorship relationship
   student.officialMentors.activeMentors.splice(mentorshipIndex, 1);
   await student.save();
 
+  // Send notification to student about removal
+  try {
+    await notifyMenteeRemoved(
+      student.user_id,
+      userId,
+      studentName,
+      mentorshipId
+    );
+
+    // Send real-time update to student
+    sendMentorshipUpdate(student.user_id, "mentee_removed", {
+      mentorName: mentor.name,
+      message: "You have been removed from the mentor's list",
+    });
+  } catch (notificationError) {
+    console.error("Failed to send notification:", notificationError);
+    // Don't fail the main operation if notification fails
+  }
+
   return res.status(200).json(
     new ApiResponse(
-      200, 
-      { 
+      200,
+      {
         removedStudent: {
           id: studentId,
-          name: studentName
-        }
-      }, 
+          name: studentName,
+        },
+      },
       "Mentee removed from your list successfully"
     )
   );

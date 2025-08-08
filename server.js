@@ -1,11 +1,13 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { createServer } from "http";
 import connectDB from "./config/db.js";
 import ApiError from "./utils/ApiError.js";
 import authRoutes from "./routes/auth.js";
 import cookieParser from "cookie-parser";
 import path from "path";
+import { initializeSocket } from "./utils/socketConfig.js";
 
 // Load environment variables
 dotenv.config();
@@ -14,6 +16,12 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const PORT = process.env.PORT || 5000;
+
+// Create HTTP server for Socket.IO
+const httpServer = createServer(app);
+
+// Initialize Socket.IO
+const io = initializeSocket(httpServer);
 
 // Connect to MongoDB
 connectDB();
@@ -51,12 +59,16 @@ import mentorRoutes from "./routes/mentor.js";
 import studentRoutes from "./routes/student.js";
 import subjectRoutes from "./routes/subject.js";
 import profileRoutes from "./routes/profile.js";
+import notificationRoutes from "./routes/notification.js";
+import ratingRoutes from "./routes/rating.js";
 
 // New routes for mentorship platform
 app.use("/api/mentors", mentorRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/profile", profileRoutes);
+app.use("/api/notifications", notificationRoutes);
+app.use("/api/ratings", ratingRoutes);
 
 // 404 Route Not Found handler
 app.use((req, res, next) => {
@@ -77,9 +89,10 @@ app.use((err, req, res, next) => {
       )
     );
 });
-// Start Server
-app.listen(PORT, () => {
+// Start Server with Socket.IO
+httpServer.listen(PORT, () => {
   console.log(`✅ Server is running on port ${PORT}`);
+  console.log(`🔌 Socket.IO initialized and ready for connections`);
 });
 
 export default app;

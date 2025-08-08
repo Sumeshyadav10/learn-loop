@@ -5,18 +5,21 @@ This document covers the enhanced mentorship system that supports both **student
 ## System Architecture Overview
 
 ### 1. **Student-to-Student Mentoring**
+
 - Students from years 1-4 can mentor each other
 - Based on strong subjects from previous semesters
 - Subject-specific mentoring relationships
 - Peers helping peers within the same branch
 
 ### 2. **Official Professional Mentoring**
+
 - Industry professionals with high designations
 - Available for all students (1st-4th year)
 - General career guidance and skill development
 - Managed through separate mentor profiles
 
 ### 3. **4th Year Student Special Case**
+
 - **Cannot get student mentors** (no seniors above them)
 - **Only access to official mentors**
 - **Can still mentor junior students** (1st, 2nd, 3rd year)
@@ -27,22 +30,27 @@ This document covers the enhanced mentorship system that supports both **student
 ## API Endpoints Overview
 
 ### Student APIs (`/api/student/`)
+
 #### Student-to-Student Mentoring
+
 - `POST /mentoring/request` - Send request to student mentor
 - `GET /mentors/subject/:subjectId` - Find student mentors for subject
 - `GET /mentoring/mentors` - Get current student mentors
 - `GET /mentoring/mentees` - Get current student mentees
 
 #### Official Mentor System
+
 - `GET /official-mentors/available` - Browse official mentors
 - `POST /official-mentors/request` - Send request to official mentor
 - `GET /official-mentors/current` - Get current official mentors
 - `GET /official-mentors/requests` - Get official mentor requests
 
 #### Enhanced Discovery
+
 - `GET /mentors/subject/:subjectId/enhanced` - Smart mentor discovery (handles 4th year)
 
 ### Mentor APIs (`/api/mentor/`)
+
 - `GET /requests/incoming` - View incoming requests from students
 - `PUT /requests/respond` - Accept/reject student requests
 - `GET /mentees` - View current mentees
@@ -63,6 +71,7 @@ This document covers the enhanced mentorship system that supports both **student
 **Description:** Smart mentor discovery that automatically handles different student years.
 
 **Response for 1st-3rd Year Students:**
+
 ```json
 {
   "statusCode": 200,
@@ -98,6 +107,7 @@ This document covers the enhanced mentorship system that supports both **student
 ```
 
 **Response for 4th Year Students:**
+
 ```json
 {
   "statusCode": 200,
@@ -127,6 +137,7 @@ This document covers the enhanced mentorship system that supports both **student
 **Description:** Send mentorship request to an official mentor.
 
 **Request Body:**
+
 ```json
 {
   "mentorId": "64f1a2b3c4d5e6f7g8h9i0j2",
@@ -135,6 +146,7 @@ This document covers the enhanced mentorship system that supports both **student
 ```
 
 **Success Response:**
+
 ```json
 {
   "statusCode": 201,
@@ -152,6 +164,7 @@ This document covers the enhanced mentorship system that supports both **student
 **Endpoint:** `GET /api/student/official-mentors/current`
 
 **Success Response:**
+
 ```json
 {
   "statusCode": 200,
@@ -192,6 +205,7 @@ This document covers the enhanced mentorship system that supports both **student
 **Endpoint:** `GET /api/mentor/dashboard`
 
 **Success Response:**
+
 ```json
 {
   "statusCode": 200,
@@ -231,9 +245,11 @@ This document covers the enhanced mentorship system that supports both **student
 **Endpoint:** `GET /api/mentor/requests/incoming`
 
 **Query Parameters:**
+
 - `status` (optional): Filter by status (`pending`, `accepted`, `rejected`, `all`). Default: `pending`
 
 **Success Response:**
+
 ```json
 {
   "statusCode": 200,
@@ -273,6 +289,7 @@ This document covers the enhanced mentorship system that supports both **student
 **Endpoint:** `PUT /api/mentor/requests/respond`
 
 **Request Body:**
+
 ```json
 {
   "requestId": "64f1a2b3c4d5e6f7g8h9i0j5",
@@ -281,6 +298,7 @@ This document covers the enhanced mentorship system that supports both **student
 ```
 
 **Success Response:**
+
 ```json
 {
   "statusCode": 200,
@@ -303,23 +321,26 @@ This document covers the enhanced mentorship system that supports both **student
 **Request Type:** `multipart/form-data`
 
 **Form Data:**
+
 - `profileImage` (file): Image file (JPG, PNG, etc.) - Max 5MB
 
 **Example Request:**
+
 ```javascript
 const formData = new FormData();
-formData.append('profileImage', imageFile);
+formData.append("profileImage", imageFile);
 
-fetch('/api/mentor/profile/image', {
-  method: 'POST',
+fetch("/api/mentor/profile/image", {
+  method: "POST",
   headers: {
-    'Authorization': `Bearer ${authToken}`
+    Authorization: `Bearer ${authToken}`,
   },
-  body: formData
+  body: formData,
 });
 ```
 
 **Success Response (200):**
+
 ```json
 {
   "statusCode": 200,
@@ -345,6 +366,7 @@ fetch('/api/mentor/profile/image', {
 ```
 
 **Validation Rules:**
+
 - File must be an image (image/jpeg, image/png, etc.)
 - Maximum file size: 5MB
 - Only authenticated mentors can upload
@@ -357,27 +379,32 @@ fetch('/api/mentor/profile/image', {
 ### Student Year-Based Access Control
 
 #### 1st Year Students
+
 - ✅ Can request mentorship from: 2nd, 3rd, 4th year students + Official mentors
 - ✅ Can mentor: No one (first year, still learning)
 - ✅ Subject access: Only current semester subjects for learning
 
-#### 2nd Year Students  
+#### 2nd Year Students
+
 - ✅ Can request mentorship from: 3rd, 4th year students + Official mentors
 - ✅ Can mentor: 1st year students
 - ✅ Subject access: Previous semester subjects as strong subjects
 
 #### 3rd Year Students
+
 - ✅ Can request mentorship from: 4th year students + Official mentors
 - ✅ Can mentor: 1st, 2nd year students
 - ✅ Subject access: Previous semester subjects as strong subjects
 
 #### 4th Year Students (**Special Case**)
+
 - ❌ **Cannot request student mentors** (no seniors above them)
 - ✅ **Can only request official mentors**
 - ✅ Can mentor: 1st, 2nd, 3rd year students
 - ✅ Subject access: All previous semester subjects
 
 ### Official Mentors (Professional)
+
 - ✅ Available for **all student years**
 - ✅ **No subject limitations** (general guidance)
 - ✅ Industry professionals with high designations
@@ -386,6 +413,7 @@ fetch('/api/mentor/profile/image', {
 ### Data Relationships
 
 #### Student Model Enhancement
+
 ```javascript
 {
   // Student-to-Student Mentoring
@@ -395,7 +423,7 @@ fetch('/api/mentor/profile/image', {
     mentors: [...],           // This student's current student mentors
     mentees: [...]            // This student's current student mentees
   },
-  
+
   // Official Professional Mentoring
   officialMentors: {
     outgoingRequests: [...],  // Requests sent to official mentors
@@ -405,6 +433,7 @@ fetch('/api/mentor/profile/image', {
 ```
 
 #### Mentor Model (Official)
+
 ```javascript
 {
   user_id: ObjectId,
@@ -427,7 +456,7 @@ fetch('/api/mentor/profile/image', {
 ```javascript
 const MentorDiscovery = ({ subjectId }) => {
   const [mentors, setMentors] = useState([]);
-  const [mentorType, setMentorType] = useState('');
+  const [mentorType, setMentorType] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -436,18 +465,18 @@ const MentorDiscovery = ({ subjectId }) => {
         const response = await fetch(
           `/api/student/mentors/subject/${subjectId}/enhanced`,
           {
-            headers: { Authorization: `Bearer ${getAuthToken()}` }
+            headers: { Authorization: `Bearer ${getAuthToken()}` },
           }
         );
-        
+
         const data = await response.json();
-        
+
         if (data.success) {
           setMentors(data.data.mentors);
           setMentorType(data.data.mentorType);
         }
       } catch (error) {
-        console.error('Error fetching mentors:', error);
+        console.error("Error fetching mentors:", error);
       } finally {
         setLoading(false);
       }
@@ -461,23 +490,25 @@ const MentorDiscovery = ({ subjectId }) => {
   return (
     <div className="mentor-discovery">
       <h3>
-        {mentorType === 'official' 
-          ? 'Official Professional Mentors' 
-          : 'Student Mentors'
-        }
+        {mentorType === "official"
+          ? "Official Professional Mentors"
+          : "Student Mentors"}
       </h3>
-      
-      {mentorType === 'official' && (
+
+      {mentorType === "official" && (
         <div className="info-banner">
-          <p>As a 4th year student, you can connect with our official industry mentors for career guidance.</p>
+          <p>
+            As a 4th year student, you can connect with our official industry
+            mentors for career guidance.
+          </p>
         </div>
       )}
-      
+
       <div className="mentor-grid">
-        {mentors.map(mentor => (
-          <MentorCard 
-            key={mentor._id} 
-            mentor={mentor} 
+        {mentors.map((mentor) => (
+          <MentorCard
+            key={mentor._id}
+            mentor={mentor}
             mentorType={mentorType}
             subjectId={subjectId}
           />
@@ -492,7 +523,7 @@ const MentorDiscovery = ({ subjectId }) => {
 
 ```javascript
 const OfficialMentorRequest = ({ mentorId, onSuccess }) => {
-  const [message, setMessage] = useState('');
+  const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -500,20 +531,20 @@ const OfficialMentorRequest = ({ mentorId, onSuccess }) => {
     setSending(true);
 
     try {
-      const response = await fetch('/api/student/official-mentors/request', {
-        method: 'POST',
+      const response = await fetch("/api/student/official-mentors/request", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${getAuthToken()}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${getAuthToken()}`,
         },
         body: JSON.stringify({
           mentorId,
-          message
-        })
+          message,
+        }),
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         alert(`Request sent to ${data.data.mentorName} successfully!`);
         onSuccess();
@@ -538,7 +569,7 @@ const OfficialMentorRequest = ({ mentorId, onSuccess }) => {
         required
       />
       <button type="submit" disabled={sending}>
-        {sending ? 'Sending Request...' : 'Send Request'}
+        {sending ? "Sending Request..." : "Send Request"}
       </button>
     </form>
   );
@@ -552,6 +583,7 @@ const OfficialMentorRequest = ({ mentorId, onSuccess }) => {
 ### Common Error Scenarios
 
 #### 4th Year Student Trying to Get Student Mentors
+
 ```json
 {
   "statusCode": 400,
@@ -561,6 +593,7 @@ const OfficialMentorRequest = ({ mentorId, onSuccess }) => {
 ```
 
 #### Duplicate Official Mentor Request
+
 ```json
 {
   "statusCode": 400,
@@ -570,6 +603,7 @@ const OfficialMentorRequest = ({ mentorId, onSuccess }) => {
 ```
 
 #### Mentor Not Active
+
 ```json
 {
   "statusCode": 400,
@@ -590,7 +624,7 @@ db.students.createIndex({ "officialMentors.outgoingRequests.mentor_id": 1 });
 db.students.createIndex({ "officialMentors.activeMentors.mentor_id": 1 });
 db.students.createIndex({ year: 1, branch: 1 });
 
-// Mentor Collection  
+// Mentor Collection
 db.mentors.createIndex({ isActive: 1 });
 db.mentors.createIndex({ skills: 1 });
 db.mentors.createIndex({ experience_years: -1 });
