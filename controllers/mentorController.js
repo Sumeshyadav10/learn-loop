@@ -563,3 +563,54 @@ export const endMentorshipRelationship = asyncHandler(async (req, res) => {
     new ApiResponse(200, {}, "Mentorship relationship ended successfully")
   );
 });
+
+// Remove mentee from mentor's list (complete removal)
+export const removeMentee = asyncHandler(async (req, res) => {
+  const { studentId } = req.body;
+  const userId = req.user._id;
+
+  if (!studentId) {
+    throw new ApiError(400, "Student ID is required");
+  }
+
+  // Get mentor profile
+  const mentor = await Mentor.findOne({ user_id: userId });
+  if (!mentor) {
+    throw new ApiError(404, "Mentor profile not found");
+  }
+
+  // Find and update the student's mentorship record
+  const student = await Student.findById(studentId);
+  if (!student) {
+    throw new ApiError(404, "Student not found");
+  }
+
+  // Find the mentorship relationship
+  const mentorshipIndex = student.officialMentors.activeMentors.findIndex(
+    (mentorRel) => mentorRel.mentor_id.toString() === mentor._id.toString()
+  );
+
+  if (mentorshipIndex === -1) {
+    throw new ApiError(404, "Mentorship relationship not found");
+  }
+
+  // Get student name for response
+  const studentName = student.name;
+
+  // Completely remove the mentorship relationship
+  student.officialMentors.activeMentors.splice(mentorshipIndex, 1);
+  await student.save();
+
+  return res.status(200).json(
+    new ApiResponse(
+      200, 
+      { 
+        removedStudent: {
+          id: studentId,
+          name: studentName
+        }
+      }, 
+      "Mentee removed from your list successfully"
+    )
+  );
+});

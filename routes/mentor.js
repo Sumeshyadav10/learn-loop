@@ -13,6 +13,7 @@ import {
   getCurrentMentees,
   getMentorDashboard,
   endMentorshipRelationship,
+  removeMentee,
 } from "../controllers/mentorController.js";
 import { protect } from "../middlewares/authMiddleware.js";
 
@@ -65,6 +66,9 @@ router.get("/dashboard", getMentorDashboard);
 
 // End mentorship relationship
 router.put("/relationship/end", endMentorshipRelationship);
+
+// Remove mentee from mentor's list
+router.delete("/mentees/remove", removeMentee);
 
 // Public mentor routes (but still require auth for security)
 router.get("/all", getAllMentors);
