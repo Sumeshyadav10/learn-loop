@@ -4,6 +4,7 @@ import {
   registerMentor,
   getMentorProfile,
   updateMentorProfile,
+  completeMentorProfile,
   updateMentorProfileImage,
   deleteMentorProfile,
   getAllMentors,
@@ -38,17 +39,20 @@ const upload = multer({
 router.use(protect);
 
 // Mentor registration and profile management
-router.post("/register", registerMentor);
+router.post("/register", upload.single("profileImage"), registerMentor); // Added image upload support
 router.get("/profile", getMentorProfile);
-router.put("/profile", updateMentorProfile);
+router.put("/profile", updateMentorProfile); // Only for existing profiles
+
+// Legacy routes for compatibility
+router.post("/profile/complete", completeMentorProfile);
 router.delete("/profile", deleteMentorProfile);
 
-// Profile image management
-router.post(
-  "/profile/image",
-  upload.single("profileImage"),
-  updateMentorProfileImage
-);
+// Profile image management (legacy - use register for new profiles)
+// router.post(
+//   "/profile/image",
+//   upload.single("profileImage"),
+//   updateMentorProfileImage
+// );
 
 // ============= MENTORSHIP MANAGEMENT ROUTES =============
 

@@ -14,8 +14,8 @@ import { scheduleWeeklyPolls } from "./utils/pollScheduler.js";
 dotenv.config();
 // Initialize Express app
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" })); // Increase limit for profile images
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 const PORT = process.env.PORT || 5000;
 
 // Create HTTP server for Socket.IO
@@ -63,15 +63,18 @@ import profileRoutes from "./routes/profile.js";
 import notificationRoutes from "./routes/notification.js";
 import ratingRoutes from "./routes/rating.js";
 import pollRoutes from "./routes/poll.js";
+import userRoutes from "./routes/user.js";
 
 // New routes for mentorship platform
 app.use("/api/mentors", mentorRoutes);
+app.use("/api/mentor", mentorRoutes); // Add this route to match frontend calls
 app.use("/api/students", studentRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/ratings", ratingRoutes);
 app.use("/api/polls", pollRoutes);
+app.use("/api/user", userRoutes);
 
 // 404 Route Not Found handler
 app.use((req, res, next) => {

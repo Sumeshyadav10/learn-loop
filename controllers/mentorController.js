@@ -17,7 +17,7 @@ import {
 } from "../utils/notificationUtils.js";
 import { sendMentorshipUpdate } from "../utils/socketConfig.js";
 
-// Register a new mentor
+// Register a new mentor (handles step-by-step creation with image upload)
 export const registerMentor = asyncHandler(async (req, res) => {
   const {
     name,
@@ -27,71 +27,129 @@ export const registerMentor = asyncHandler(async (req, res) => {
     experience_years,
     bio,
     available_time_slots,
+    isActive,
   } = req.body;
-  const userId = req.user._id;
-
-  // Validate required fields
-  if (!name || !phone || !designation || !skills || !experience_years || !bio) {
-    throw new ApiError(400, "All fields are required");
-  }
+  const userId = req.user.id;
 
   // Check if user already has a mentor profile
   const existingMentor = await Mentor.findOne({ user_id: userId });
   if (existingMentor) {
-    throw new ApiError(400, "Mentor profile already exists");
+    throw new ApiError(
+      400,
+      "Mentor profile already exists. Use update endpoint instead."
+    );
   }
 
-  // Validate skills array
-  if (!Array.isArray(skills) || skills.length === 0) {
-    throw new ApiError(400, "At least one skill is required");
+  // Handle image upload if provided
+  let profileImageUrl = null;
+  if (req.file) {
+    try {
+      const uploadResult = await uploadOnCloudinary(
+        req.file.path,
+        "mentors/profile-images"
+      );
+      if (uploadResult) {
+        profileImageUrl = uploadResult.secure_url;
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      // Don't fail the entire operation if image upload fails
+      console.log("Continuing without image upload...");
+    }
   }
 
-  // Validate experience years
-  if (experience_years < 0) {
-    throw new ApiError(400, "Experience years cannot be negative");
-  }
-
-  // Create mentor profile
-  const mentor = await Mentor.create({
+  // Create mentor profile with provided data (flexible validation)
+  const mentorData = {
     user_id: userId,
-    name: name.trim(),
-    phone: phone.trim(),
-    designation: designation.trim(),
-    skills: skills.map((skill) => skill.trim()),
-    experience_years,
-    bio: bio.trim(),
+    name: (name || "").trim(),
+    phone: (phone || "").trim(),
+    designation: (designation || "").trim(),
+    skills: Array.isArray(skills) ? skills.map((skill) => skill.trim()) : [],
+    experience_years: experience_years || 0,
+    bio: (bio || "").trim(),
     available_time_slots: available_time_slots || [],
-  });
+    profileImage: profileImageUrl,
+    isActive: isActive !== undefined ? isActive : true,
+  };
 
-  // Update user role and profile completion status
-  await User.findByIdAndUpdate(userId, {
-    role: "mentor",
-    isProfileComplete: true,
-  });
+  const mentor = await Mentor.create(mentorData);
 
-  const mentorData = await Mentor.findById(mentor._id).populate(
+  // Update user profile completion status based on substantial data
+  const hasSubstantialData = name && phone && designation && bio;
+  if (hasSubstantialData) {
+    await User.findByIdAndUpdate(userId, {
+      role: "mentor",
+      isProfileComplete: true,
+    });
+  }
+
+  // Return the created mentor with populated user data
+  const mentorResponse = await Mentor.findById(mentor._id).populate(
     "user_id",
-    "email fullName"
+    "email fullName username"
   );
 
-  res
-    .status(201)
-    .json(
-      new ApiResponse(201, mentorData, "Mentor profile created successfully")
-    );
+  res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        mentor: mentorResponse,
+        message: hasSubstantialData
+          ? "Mentor profile created successfully! You can now start mentoring students."
+          : "Mentor profile created. Complete all sections to start mentoring.",
+        profileComplete: hasSubstantialData,
+        imageUploaded: !!profileImageUrl,
+      },
+      "Mentor profile created successfully"
+    )
+  );
 });
 
-// Get mentor profile
+// Get mentor profile (supports step-by-step creation)
 export const getMentorProfile = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
-  const mentor = await Mentor.findOne({ user_id: userId }).populate(
+  let mentor = await Mentor.findOne({ user_id: userId }).populate(
     "user_id",
-    "email fullName"
+    "email fullName username"
   );
 
+  // If no mentor profile exists, return a default structure for step-by-step creation
   if (!mentor) {
-    throw new ApiError(404, "Mentor profile not found");
+    const user = await User.findById(userId);
+    if (!user) {
+      throw new ApiError(404, "User not found");
+    }
+
+    // Return default mentor structure
+    const defaultMentor = {
+      user_id: {
+        _id: userId,
+        email: user.email,
+        fullName: user.fullName,
+        username: user.username,
+      },
+      name: "",
+      phone: "",
+      designation: "",
+      bio: "",
+      skills: [],
+      experience_years: 0,
+      available_time_slots: [],
+      profileImage: null,
+      isActive: true,
+      isProfileComplete: false,
+    };
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          defaultMentor,
+          "Default mentor profile structure created"
+        )
+      );
   }
 
   res
@@ -101,42 +159,143 @@ export const getMentorProfile = asyncHandler(async (req, res) => {
     );
 });
 
-// Update mentor profile
+// Update mentor profile (only for existing profiles)
 export const updateMentorProfile = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id;
   const updateFields = req.body;
 
   // Remove fields that shouldn't be updated directly
   delete updateFields.user_id;
   delete updateFields._id;
 
+  // Clean and sanitize the update fields
+  const sanitizedFields = {};
+  Object.keys(updateFields).forEach((key) => {
+    const value = updateFields[key];
+    if (value !== undefined && value !== null) {
+      if (typeof value === "string") {
+        sanitizedFields[key] = value.trim();
+      } else {
+        sanitizedFields[key] = value;
+      }
+    }
+  });
+
+  // Check if mentor profile exists
+  const existingMentor = await Mentor.findOne({ user_id: userId });
+
+  if (!existingMentor) {
+    throw new ApiError(
+      404,
+      "Mentor profile not found. Please create a profile first using the register endpoint."
+    );
+  }
+
+  // Update existing mentor profile with provided fields only
+  try {
+    const mentor = await Mentor.findOneAndUpdate(
+      { user_id: userId },
+      { $set: sanitizedFields },
+      {
+        new: true,
+        runValidators: false, // Disable validators for partial updates
+      }
+    ).populate("user_id", "email fullName username");
+
+    // Check if profile is now complete and update user status if needed
+    const isComplete =
+      mentor.name && mentor.phone && mentor.designation && mentor.bio;
+    if (isComplete) {
+      await User.findByIdAndUpdate(userId, {
+        role: "mentor",
+        isProfileComplete: true,
+      });
+    }
+
+    res.status(200).json(
+      new ApiResponse(
+        200,
+        {
+          mentor,
+          profileComplete: isComplete,
+        },
+        "Mentor profile updated successfully"
+      )
+    );
+  } catch (error) {
+    console.error("Error updating mentor profile:", error);
+    throw new ApiError(
+      500,
+      `Failed to update mentor profile: ${error.message}`
+    );
+  }
+});
+
+// Complete mentor profile (mark user profile as complete)
+export const completeMentorProfile = asyncHandler(async (req, res) => {
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
+  const profileData = req.body;
+
+  // Remove fields that shouldn't be updated directly
+  delete profileData.user_id;
+  delete profileData._id;
+  delete profileData.isProfileComplete; // We'll handle this separately
+
+  // Update mentor profile
   const mentor = await Mentor.findOneAndUpdate(
     { user_id: userId },
-    updateFields,
+    profileData,
     { new: true, runValidators: true }
-  ).populate("user_id", "email fullName");
+  ).populate("user_id", "email fullName username");
 
   if (!mentor) {
     throw new ApiError(404, "Mentor profile not found");
   }
 
+  // Update user's isProfileComplete field
+  await User.findByIdAndUpdate(
+    userId,
+    { isProfileComplete: true },
+    { new: true }
+  );
+
   res
     .status(200)
-    .json(new ApiResponse(200, mentor, "Mentor profile updated successfully"));
+    .json(
+      new ApiResponse(
+        200,
+        mentor,
+        "Mentor profile completed successfully! You can now start mentoring students."
+      )
+    );
 });
 
 // Update mentor profile image
 export const updateMentorProfileImage = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
   if (!req.file) {
     throw new ApiError(400, "Profile image file is required");
   }
 
   // Get current mentor to check for existing image
-  const currentMentor = await Mentor.findOne({ user_id: userId });
+  let currentMentor = await Mentor.findOne({ user_id: userId });
+
+  // If no mentor profile exists, create a basic one first
   if (!currentMentor) {
-    throw new ApiError(404, "Mentor profile not found");
+    // Create a minimal mentor profile to store the image
+    currentMentor = await Mentor.create({
+      user_id: userId,
+      name: "",
+      phone: "",
+      designation: "",
+      bio: "",
+      skills: [],
+      experience_years: 0,
+      available_time_slots: [],
+      isActive: true,
+      profileImage: null,
+    });
   }
 
   try {
@@ -191,7 +350,7 @@ export const updateMentorProfileImage = asyncHandler(async (req, res) => {
 
 // Delete mentor profile
 export const deleteMentorProfile = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
   const mentor = await Mentor.findOneAndDelete({ user_id: userId });
 
@@ -268,7 +427,7 @@ export const getMentorById = asyncHandler(async (req, res) => {
 // Get incoming mentorship requests (for mentors)
 export const getIncomingMentorshipRequests = asyncHandler(async (req, res) => {
   const { status = "pending" } = req.query;
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
   // Get mentor profile
   const mentor = await Mentor.findOne({ user_id: userId });
@@ -336,7 +495,7 @@ export const getIncomingMentorshipRequests = asyncHandler(async (req, res) => {
 // Respond to mentorship request (accept/reject)
 export const respondToMentorshipRequest = asyncHandler(async (req, res) => {
   const { requestId, response } = req.body; // response: "accepted" or "rejected"
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
   if (!requestId || !response) {
     throw new ApiError(400, "Request ID and response are required");
@@ -446,7 +605,7 @@ export const respondToMentorshipRequest = asyncHandler(async (req, res) => {
 
 // Get current mentees (for mentors)
 export const getCurrentMentees = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
   // Get mentor profile
   const mentor = await Mentor.findOne({ user_id: userId });
@@ -510,7 +669,7 @@ export const getCurrentMentees = asyncHandler(async (req, res) => {
 
 // Get mentor dashboard
 export const getMentorDashboard = asyncHandler(async (req, res) => {
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
   // Get mentor profile
   const mentor = await Mentor.findOne({ user_id: userId });
@@ -589,7 +748,7 @@ export const getMentorDashboard = asyncHandler(async (req, res) => {
 // End mentorship relationship (mentor side)
 export const endMentorshipRelationship = asyncHandler(async (req, res) => {
   const { studentId } = req.body;
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
   if (!studentId) {
     throw new ApiError(400, "Student ID is required");
@@ -632,7 +791,7 @@ export const endMentorshipRelationship = asyncHandler(async (req, res) => {
 // Remove mentee from mentor's list (complete removal)
 export const removeMentee = asyncHandler(async (req, res) => {
   const { studentId } = req.body;
-  const userId = req.user._id;
+  const userId = req.user.id; // Fixed: use req.user.id instead of req.user._id
 
   if (!studentId) {
     throw new ApiError(400, "Student ID is required");
