@@ -1,97 +1,169 @@
-import Student from "../models/student.js";
-import User from "../models/user.js";
-import Subject from "../models/subject.js";
-import Mentor from "../models/mentor.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
+import Student from "../models/student.js";
+import User from "../models/user.js";
+import Mentor from "../models/mentor.js";
+import Subject from "../models/subject.js";
 import {
   uploadOnCloudinary,
   deleteFromCloudinary,
   extractPublicId,
 } from "../utils/cloudinary.js";
-import {
+import notificationUtils, {
   notifyMentorshipRequest,
   notifyMentorshipResponse,
-  notifyOfficialMentorRequest,
   notifyNewConnection,
-  notifyMentorshipEnded,
+  notifyOfficialMentorRequest,
 } from "../utils/notificationUtils.js";
 import { sendMentorshipUpdate } from "../utils/socketConfig.js";
 
-// Register a new student profile
-export const registerStudent = asyncHandler(async (req, res) => {
-  const { name, phone, branch, year, currentSemester } = req.body;
-  const userId = req.user._id;
+// Helper function to fetch subjects from database based on branch and semester
+const getSubjectsFromDatabase = async (branch, semester) => {
+  try {
+    const subjects = await Subject.find({
+      branch: branch,
+      semester: parseInt(semester),
+      isActive: true,
+    }).select("subject_name subject_code credits");
 
-  // Validate required fields
-  if (!name || !phone || !branch || !year || !currentSemester) {
-    throw new ApiError(400, "All fields are required");
+    return subjects.map((subject) => ({
+      name: subject.subject_name,
+      code: subject.subject_code,
+      credits: subject.credits,
+    }));
+  } catch (error) {
+    console.error("Error fetching subjects from database:", error);
+    return [];
   }
+};
+
+// Register a new student (handles step-by-step creation with image upload)
+export const registerStudent = asyncHandler(async (req, res) => {
+  const {
+    name,
+    phone,
+    branch,
+    year,
+    currentSemester,
+    strongSubjects,
+    academicInfo,
+    isActive,
+  } = req.body;
+  const userId = req.user.id;
 
   // Check if user already has a student profile
   const existingStudent = await Student.findOne({ user_id: userId });
   if (existingStudent) {
-    throw new ApiError(400, "Student profile already exists");
-  }
-
-  // Validate branch, year, and semester
-  const validBranches = ["Computer", "IT", "AIML", "ECS"];
-  if (!validBranches.includes(branch)) {
-    throw new ApiError(400, "Invalid branch selected");
-  }
-
-  if (year < 1 || year > 4) {
-    throw new ApiError(400, "Year must be between 1 and 4");
-  }
-
-  if (currentSemester < 1 || currentSemester > 8) {
-    throw new ApiError(400, "Semester must be between 1 and 8");
-  }
-
-  // Validate year-semester consistency
-  const expectedSemesterRange = {
-    1: [1, 2],
-    2: [3, 4],
-    3: [5, 6],
-    4: [7, 8],
-  };
-
-  if (!expectedSemesterRange[year].includes(currentSemester)) {
     throw new ApiError(
       400,
-      `Semester ${currentSemester} is not valid for year ${year}`
+      "Student profile already exists. Use update endpoint instead."
     );
   }
 
-  // Create student profile
-  const student = await Student.create({
-    user_id: userId,
-    name: name.trim(),
-    phone: phone.trim(),
-    branch,
-    year,
-    currentSemester,
-  });
+  // Handle image upload if provided
+  let profileImageUrl = null;
+  if (req.file) {
+    try {
+      const result = await uploadOnCloudinary(
+        req.file.path,
+        "students/profile-images"
+      );
+      if (result) {
+        profileImageUrl = result.secure_url;
+      }
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      // Continue without image if upload fails
+    }
+  }
 
-  // Update user role
-  await User.findByIdAndUpdate(userId, {
-    role: "student",
-  });
+  // Parse academic info if it's a string
+  let parsedAcademicInfo = academicInfo;
+  if (typeof academicInfo === "string") {
+    try {
+      parsedAcademicInfo = JSON.parse(academicInfo);
+    } catch (error) {
+      parsedAcademicInfo = { cgpa: 0, completedSemesters: [] };
+    }
+  }
+
+  // Parse strong subjects if it's a string
+  let parsedStrongSubjects = strongSubjects;
+  if (typeof strongSubjects === "string") {
+    try {
+      parsedStrongSubjects = JSON.parse(strongSubjects);
+    } catch (error) {
+      parsedStrongSubjects = [];
+    }
+  }
+
+  // Create student profile with provided data (flexible validation)
+  const studentData = {
+    user_id: userId,
+    name: (name || "").trim(),
+    phone: (phone || "").trim(),
+    branch: branch || "",
+    year: year || 1,
+    currentSemester: currentSemester || 1,
+    strongSubjects: parsedStrongSubjects || [],
+    academicInfo: parsedAcademicInfo || { cgpa: 0, completedSemesters: [] },
+    profileImage: profileImageUrl,
+    isActive: isActive !== undefined ? isActive : true,
+  };
+
+  // Auto-assign subjects based on semester and branch from database if we have both
+  if (branch && currentSemester) {
+    const subjects = await getSubjectsFromDatabase(branch, currentSemester);
+    studentData.subjects = subjects;
+
+    // Validate year-semester consistency only if both are provided
+    if (year && currentSemester) {
+      const expectedSemesterRange = {
+        1: [1, 2],
+        2: [3, 4],
+        3: [5, 6],
+        4: [7, 8],
+      };
+
+      if (!expectedSemesterRange[year]?.includes(parseInt(currentSemester))) {
+        throw new ApiError(
+          400,
+          `Semester ${currentSemester} is not valid for year ${year}`
+        );
+      }
+    }
+  }
+
+  const student = await Student.create(studentData);
+
+  // Update user profile completion status based on substantial data
+  const hasSubstantialData = name && phone && branch && year && currentSemester;
+  if (hasSubstantialData) {
+    await User.findByIdAndUpdate(userId, {
+      role: "student",
+      isProfileComplete: true,
+    });
+  }
 
   const populatedStudent = await Student.findById(student._id)
     .populate("user_id", "email username")
     .select("-__v");
 
-  return res
-    .status(201)
-    .json(
-      new ApiResponse(
-        201,
-        populatedStudent,
-        "Student profile created successfully"
-      )
-    );
+  return res.status(201).json(
+    new ApiResponse(
+      201,
+      {
+        student: populatedStudent,
+        message: hasSubstantialData
+          ? "Student profile created successfully! You can now connect with mentors."
+          : "Student profile created. Complete all sections to start connecting with mentors.",
+        profileComplete: hasSubstantialData,
+        imageUploaded: !!profileImageUrl,
+      },
+      "Student profile created successfully"
+    )
+  );
 });
 
 // Get available subjects for strong subject selection (previous semesters only)
@@ -521,40 +593,137 @@ export const updateAcademicInfo = asyncHandler(async (req, res) => {
 // Update student profile
 export const updateStudentProfile = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const { name, phone, year, currentSemester } = req.body;
+  const updateFields = req.body;
 
-  const student = await Student.findOne({ user_id: userId });
-  if (!student) {
-    throw new ApiError(404, "Student profile not found");
+  // Remove fields that shouldn't be updated directly
+  delete updateFields.user_id;
+  delete updateFields._id;
+
+  // Clean and sanitize the update fields
+  const sanitizedFields = {};
+  Object.keys(updateFields).forEach((key) => {
+    const value = updateFields[key];
+    if (value !== undefined && value !== null) {
+      if (typeof value === "string") {
+        sanitizedFields[key] = value.trim();
+      } else {
+        sanitizedFields[key] = value;
+      }
+    }
+  });
+
+  // Handle special fields that need parsing
+  if (
+    sanitizedFields.academicInfo &&
+    typeof sanitizedFields.academicInfo === "string"
+  ) {
+    try {
+      sanitizedFields.academicInfo = JSON.parse(sanitizedFields.academicInfo);
+    } catch (error) {
+      delete sanitizedFields.academicInfo; // Remove invalid JSON
+    }
   }
 
-  // Update basic fields
-  if (name) student.name = name.trim();
-  if (phone) student.phone = phone.trim();
-  if (year && year >= 1 && year <= 4) student.year = year;
-  if (currentSemester && currentSemester >= 1 && currentSemester <= 8) {
-    student.currentSemester = currentSemester;
+  if (
+    sanitizedFields.strongSubjects &&
+    typeof sanitizedFields.strongSubjects === "string"
+  ) {
+    try {
+      sanitizedFields.strongSubjects = JSON.parse(
+        sanitizedFields.strongSubjects
+      );
+    } catch (error) {
+      delete sanitizedFields.strongSubjects; // Remove invalid JSON
+    }
   }
 
-  await student.save();
+  // Check if student profile exists
+  const existingStudent = await Student.findOne({ user_id: userId });
 
-  const updatedStudent = await Student.findById(student._id)
-    .populate(
-      "strongSubjects.subject_id",
-      "subject_name subject_code semester credits"
-    )
-    .populate("user_id", "email username")
-    .select("-__v");
+  if (!existingStudent) {
+    throw new ApiError(
+      404,
+      "Student profile not found. Please create a profile first using the register endpoint."
+    );
+  }
 
-  return res
-    .status(200)
-    .json(
+  // Auto-assign subjects if branch and semester are being updated
+  if (sanitizedFields.branch || sanitizedFields.currentSemester) {
+    const branch = sanitizedFields.branch || existingStudent.branch;
+    const semester =
+      sanitizedFields.currentSemester || existingStudent.currentSemester;
+
+    if (branch && semester) {
+      const subjects = await getSubjectsFromDatabase(branch, semester);
+      sanitizedFields.subjects = subjects;
+    }
+  }
+
+  // Validate year-semester consistency if both are present
+  if (sanitizedFields.year || sanitizedFields.currentSemester) {
+    const year = sanitizedFields.year || existingStudent.year;
+    const semester =
+      sanitizedFields.currentSemester || existingStudent.currentSemester;
+
+    if (year && semester) {
+      const expectedSemesterRange = {
+        1: [1, 2],
+        2: [3, 4],
+        3: [5, 6],
+        4: [7, 8],
+      };
+
+      if (!expectedSemesterRange[year]?.includes(parseInt(semester))) {
+        throw new ApiError(
+          400,
+          `Semester ${semester} is not valid for year ${year}`
+        );
+      }
+    }
+  }
+
+  // Update existing student profile with provided fields only
+  try {
+    const student = await Student.findOneAndUpdate(
+      { user_id: userId },
+      { $set: sanitizedFields },
+      {
+        new: true,
+        runValidators: false, // Disable validators for partial updates
+      }
+    ).populate("user_id", "email username");
+
+    // Check if profile is now complete and update user status if needed
+    const isComplete =
+      student.name &&
+      student.phone &&
+      student.branch &&
+      student.year &&
+      student.currentSemester;
+    if (isComplete) {
+      await User.findByIdAndUpdate(userId, {
+        role: "student",
+        isProfileComplete: true,
+      });
+    }
+
+    res.status(200).json(
       new ApiResponse(
         200,
-        updatedStudent,
+        {
+          student,
+          profileComplete: isComplete,
+        },
         "Student profile updated successfully"
       )
     );
+  } catch (error) {
+    console.error("Error updating student profile:", error);
+    throw new ApiError(
+      500,
+      `Failed to update student profile: ${error.message}`
+    );
+  }
 });
 
 // Delete student profile
@@ -650,21 +819,41 @@ export const getStudentById = asyncHandler(async (req, res) => {
     );
 });
 
-// Get subjects by branch and semester
-export const getSubjectsByBranchSemester = asyncHandler(async (req, res) => {
-  const { branch, semester } = req.params;
+// Get subjects by semester and branch
+export const getSubjectsBySemester = asyncHandler(async (req, res) => {
+  const { semester } = req.params;
+  const { branch } = req.query;
+
+  if (!semester || !branch) {
+    throw new ApiError(400, "Semester and branch are required");
+  }
 
   const subjects = await Subject.find({
-    branch,
+    branch: branch,
     semester: parseInt(semester),
     isActive: true,
   })
     .select("subject_name subject_code credits")
     .sort({ subject_name: 1 });
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, subjects, "Subjects retrieved successfully"));
+  const formattedSubjects = subjects.map((subject) => ({
+    name: subject.subject_name,
+    code: subject.subject_code,
+    credits: subject.credits,
+  }));
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      {
+        semester: parseInt(semester),
+        branch,
+        subjects: formattedSubjects,
+        totalSubjects: formattedSubjects.length,
+      },
+      "Subjects retrieved successfully"
+    )
+  );
 });
 
 // ============= MENTORSHIP REQUEST SYSTEM =============

@@ -6,15 +6,30 @@ import ApiResponse from "../utils/ApiResponse.js";
 // Get user notifications
 export const getNotifications = asyncHandler(async (req, res) => {
   const userId = req.user._id;
-  const { page = 1, limit = 20, unreadOnly = false } = req.query;
+  const { page = 1, limit = 20, isRead, type } = req.query;
 
   const query = {
     recipient: userId,
     isDeleted: false,
   };
 
-  if (unreadOnly === "true") {
-    query.isRead = false;
+  // Filter by read status if specified
+  if (isRead !== undefined) {
+    query.isRead = isRead === "true";
+  }
+
+  // Filter by notification type if specified
+  if (type && type !== "all") {
+    // Map frontend type names to backend type patterns
+    const typePatterns = {
+      mentorship: /mentorship|mentor|mentee/i,
+      system: /system|announcement/i,
+      rating: /rating/i,
+    };
+
+    if (typePatterns[type]) {
+      query.type = { $regex: typePatterns[type] };
+    }
   }
 
   const notifications = await Notification.find(query)
@@ -92,6 +107,29 @@ export const markAsRead = asyncHandler(async (req, res) => {
   res
     .status(200)
     .json(new ApiResponse(200, notification, "Notification marked as read"));
+});
+
+// Mark notification as unread
+export const markAsUnread = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const { notificationId } = req.params;
+
+  const notification = await Notification.findOneAndUpdate(
+    {
+      _id: notificationId,
+      recipient: userId,
+    },
+    { isRead: false },
+    { new: true }
+  );
+
+  if (!notification) {
+    throw new ApiError(404, "Notification not found");
+  }
+
+  res
+    .status(200)
+    .json(new ApiResponse(200, notification, "Notification marked as unread"));
 });
 
 // Mark multiple notifications as read
@@ -214,8 +252,32 @@ export const clearAllNotifications = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(
         200,
-        { deletedCount: result.modifiedCount },
-        "All notifications cleared"
+        { modifiedCount: result.modifiedCount },
+        `All notifications cleared`
+      )
+    );
+});
+
+// Delete all read notifications
+export const deleteAllRead = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const result = await Notification.updateMany(
+    {
+      recipient: userId,
+      isRead: true,
+      isDeleted: false,
+    },
+    { isDeleted: true }
+  );
+
+  res
+    .status(200)
+    .json(
+      new ApiResponse(
+        200,
+        { modifiedCount: result.modifiedCount },
+        `${result.modifiedCount} read notifications deleted`
       )
     );
 });

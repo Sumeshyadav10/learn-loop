@@ -3,11 +3,13 @@ import {
   getNotifications,
   getUnreadCount,
   markAsRead,
+  markAsUnread,
   markMultipleAsRead,
   markAllAsRead,
   deleteNotification,
   deleteMultipleNotifications,
   clearAllNotifications,
+  deleteAllRead,
   getNotificationById,
   getNotificationStats,
 } from "../controllers/notificationController.js";
@@ -25,25 +27,31 @@ router.get("/", getNotifications);
 router.get("/unread-count", getUnreadCount);
 
 // Get notification statistics
-router.get("/stats", getNotificationStats);
+router.get("/statistics", getNotificationStats);
 
 // Get specific notification by ID
 router.get("/:notificationId", getNotificationById);
 
 // Mark single notification as read
-router.put("/:notificationId/read", markAsRead);
+router.put("/:notificationId/mark-read", markAsRead);
+
+// Mark single notification as unread
+router.put("/:notificationId/mark-unread", markAsUnread);
 
 // Mark multiple notifications as read
-router.put("/read", markMultipleAsRead);
+router.put("/mark-read", markMultipleAsRead);
 
 // Mark all notifications as read
-router.put("/read-all", markAllAsRead);
+router.put("/mark-all-read", markAllAsRead);
 
 // Delete single notification
 router.delete("/:notificationId", deleteNotification);
 
 // Delete multiple notifications
 router.delete("/", deleteMultipleNotifications);
+
+// Delete all read notifications
+router.delete("/delete-all-read", deleteAllRead);
 
 // Clear all notifications
 router.delete("/clear-all", clearAllNotifications);

@@ -69,6 +69,7 @@ import userRoutes from "./routes/user.js";
 app.use("/api/mentors", mentorRoutes);
 app.use("/api/mentor", mentorRoutes); // Add this route to match frontend calls
 app.use("/api/students", studentRoutes);
+app.use("/api/student", studentRoutes); // Add this route to match frontend calls
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/notifications", notificationRoutes);

@@ -7,7 +7,7 @@ import {
   deleteStudentProfile,
   getAllStudents,
   getStudentById,
-  getSubjectsByBranchSemester,
+  getSubjectsBySemester,
   getAvailableSubjectsForMentoring,
   addStrongSubjects,
   updateProfileImage,
@@ -65,7 +65,7 @@ const upload = multer({
 router.use(protect);
 
 // Student registration and profile management
-router.post("/register", registerStudent);
+router.post("/register", upload.single("profileImage"), registerStudent);
 router.get("/profile", getStudentProfile);
 router.put("/profile", updateStudentProfile);
 router.delete("/profile", deleteStudentProfile);
@@ -220,12 +220,7 @@ router.get(
 );
 
 // Subject-related routes
-router.get(
-  "/subjects/:branch/:semester",
-  validateBranch,
-  validateSemester,
-  getSubjectsByBranchSemester
-);
+router.get("/subjects/:semester", validateSemester, getSubjectsBySemester);
 
 // Public student routes (but still require auth for security)
 router.get("/all", validatePagination, getAllStudents);
